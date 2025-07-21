@@ -1,0 +1,18 @@
+#!/bin/bash -e
+
+# variables
+export date=`date +%Y%m%d-%H%M%S`
+export resources=bin/SonarResources
+
+# Step 1: SonarDistrib
+git clone --recursive https://github.com/FFXIV-Sonar/SonarDistrib.git src/SonarDistrib || true
+(
+	cd src/SonarDistrib
+	git pull || true
+
+	cd SonarResources
+	dotnet publish -c Release "-p:SelfContained=true;PublishSingleFile=true" -o ../../../bin
+)
+
+# Step 2
+${resources}

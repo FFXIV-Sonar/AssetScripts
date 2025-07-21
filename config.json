@@ -1,0 +1,15 @@
+{
+  "AssetsPath": "assets/",
+  "ResourcesPath": "assets/resources/",
+
+  "GameSqpacks": [
+    "global/game/sqpack",
+    "cn/game/sqpack",
+    "kr/game/sqpack"
+  ],
+
+  "Interactive": false,
+  "BuildMapImages": true,
+  "BuildMapParallel": -1,
+  "BuildZoneImages": true
+}

@@ -1,0 +1,36 @@
+# Assets directory
+assets/*
+!assets/data/.keep
+!assets/images/.keep
+!assets/resources/.keep
+!assets/deduplicate.bat
+!assets/deduplicate.sh
+
+# Binaries directory
+bin/*
+!bin/.keep
+
+# Downloads directories
+downloads/*
+!downloads/.keep
+
+# Game directories
+global
+global.new
+global.old
+cn
+cn.new
+cn.old
+kr
+kr.new
+kr.old
+
+# Source files
+src/*
+!src/.keep
+
+# Log files
+*.log
+
+# My backups (apologies I needed a place for this, 3 entries to future-proof)
+_backups/*
