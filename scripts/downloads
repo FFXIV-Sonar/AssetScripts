@@ -3,6 +3,7 @@
 # variables
 export date=`date +%Y%m%d-%H%M%S`
 export downloader=bin/FFXIVDownloader.Command
+export patchver=bin/ffxiv-version
 export options="--verbose --debug"
 export options2="-p 1"
 
@@ -11,13 +12,18 @@ function perform_download {
 	#args
 	slug=$1
 	output=$2
+	verfile=$3
 
-	echo "Slug: ${slug} => ${output}"
+	echo "Slug: ${slug} => ${output} (${verfile})"
 	echo "Command:" ${downloader} ${options} download ${options2} -s ${slug} -c ffxiv-lut/cluts/${slug} -o downloads/${slug}
 	                ${downloader} ${options} download ${options2} -s ${slug} -c ffxiv-lut/cluts/${slug} -o downloads/${slug}
 	
 	mkdir -p ${output} || true
 	cp -rlv downloads/${slug}/* ${output}
+	
+	ver=`${patchver} downloads/${slug}/.cachemeta.json`
+	echo -n "${ver}" > "${output}/${verfile}.ver"
+	echo -n "${ver}" > "${output}/${verfile}.bck"
 }
 
 # Step 1: ffxiv-lut
@@ -37,44 +43,54 @@ git clone https://github.com/WorkingRobot/ffxiv-downloader.git src/ffxiv-downloa
 	dotnet publish -c Release "-p:SelfContained=true;PublishSingleFile=true" -o ../../../bin
 )
 
-# Step 3a: Global version
+# Step 3: ffxiv-version
+git clone https://git.reminie.com/rreminy/ffxiv-version.git src/ffxiv-version || true
+(
+	cd src/ffxiv-version
+	git pull || true
+	
+	cd ffxiv-version
+	dotnet publish -c Release "-p:SelfContained=true;PublishSingleFile=true" -o ../../../bin
+)
+
+# Step 4a: Global version
 (
 	rm -rfv global.new || true
-	perform_download 2b5cbc63 global.new/boot # boot
-	perform_download 4e9a232b global.new/game # base
-	perform_download 6b936f08 global.new/game # ex1
-	perform_download f29a3eb2 global.new/game # ex2
-	perform_download 859d0e24 global.new/game # ex3
-	perform_download 1bf99b87 global.new/game # ex4
-	perform_download 6cfeab11 global.new/game # ex5
+	perform_download 2b5cbc63 global.new/boot ffxivboot
+	perform_download 4e9a232b global.new/game ffxivgame
+	perform_download 6b936f08 global.new/game sqpack/ex1/ex1
+	perform_download f29a3eb2 global.new/game sqpack/ex2/ex2
+	perform_download 859d0e24 global.new/game sqpack/ex3/ex3
+	perform_download 1bf99b87 global.new/game sqpack/ex4/ex4
+	perform_download 6cfeab11 global.new/game sqpack/ex5/ex5
 	rm -rfv global.old
 	mv global global.old
 	mv global.new global
 ) 2>&1 | tee -a global-${date}.log
 
-# Step 3b: China version
+# Step 4b: China version
 (
 	rm -rfv cn.new || true
-	perform_download c38effbc cn.new/game # base
-	perform_download 77420d17 cn.new/game # ex1
-	perform_download ee4b5cad cn.new/game # ex2
-	perform_download 994c6c3b cn.new/game # ex3
-	perform_download 0728f998 cn.new/game # ex4
-	perform_download 702fc90e cn.new/game # ex5
+	perform_download c38effbc cn.new/game ffxivgame
+	perform_download 77420d17 cn.new/game sqpack/ex1/ex1
+	perform_download ee4b5cad cn.new/game sqpack/ex2/ex2
+	perform_download 994c6c3b cn.new/game sqpack/ex3/ex3
+	perform_download 0728f998 cn.new/game sqpack/ex4/ex4
+	perform_download 702fc90e cn.new/game sqpack/ex5/ex5
 	rm -rfv cn.old
 	mv cn cn.old
 	mv cn.new cn
 ) 2>&1 | tee -a cn-${date}.log
 
-# Step 3c: Korea version
+# Step 4c: Korea version
 (
 	rm -rfv kr.new || true
-	perform_download de199059 kr.new/game # base
-	perform_download 573d8c07 kr.new/game # ex1
-	perform_download ce34ddbd kr.new/game # ex2
-	perform_download b933ed2b kr.new/game # ex3
-	perform_download 27577888 kr.new/game # ex4
-	perform_download 5050481e kr.new/game # ex5
+	perform_download de199059 kr.new/game ffxivgame
+	perform_download 573d8c07 kr.new/game sqpack/ex1/ex1
+	perform_download ce34ddbd kr.new/game sqpack/ex2/ex2
+	perform_download b933ed2b kr.new/game sqpack/ex3/ex3
+	perform_download 27577888 kr.new/game sqpack/ex4/ex4
+	perform_download 5050481e kr.new/game sqpack/ex5/ex5
 	rm -rfv kr.old
 	mv kr kr.old
 	mv kr.new kr
