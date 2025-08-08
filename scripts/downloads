@@ -30,6 +30,7 @@ function perform_download {
 git clone https://github.com/WorkingRobot/ffxiv-lut.git src/ffxiv-lut || true
 (
     cd src/ffxiv-lut
+	git stash || true
 	git pull || true
 )
 
@@ -37,6 +38,7 @@ git clone https://github.com/WorkingRobot/ffxiv-lut.git src/ffxiv-lut || true
 git clone https://github.com/WorkingRobot/ffxiv-downloader.git src/ffxiv-downloader || true
 (
 	cd src/ffxiv-downloader
+	git stash || true
 	git pull || true
 
 	cd FFXIVDownloader.Command
@@ -47,6 +49,7 @@ git clone https://github.com/WorkingRobot/ffxiv-downloader.git src/ffxiv-downloa
 git clone https://git.reminie.com/rreminy/ffxiv-version.git src/ffxiv-version || true
 (
 	cd src/ffxiv-version
+	git stash || true
 	git pull || true
 	
 	cd ffxiv-version

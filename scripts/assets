@@ -8,6 +8,7 @@ export resources=bin/SonarResources
 git clone --recursive https://github.com/FFXIV-Sonar/SonarDistrib.git src/SonarDistrib || true
 (
 	cd src/SonarDistrib
+	git stash || true
 	git pull || true
 
 	cd SonarResources
