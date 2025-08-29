@@ -15,8 +15,8 @@ function perform_download {
 	verfile=$3
 
 	echo "Slug: ${slug} => ${output} (${verfile})"
-	echo "Command:" ${downloader} ${options} download ${options2} -s ${slug} -c ffxiv-lut/cluts/${slug} -o downloads/${slug}
-	                ${downloader} ${options} download ${options2} -s ${slug} -c ffxiv-lut/cluts/${slug} -o downloads/${slug}
+	echo "Command:" ${downloader} ${options} download ${options2} -s ${slug} -c src/ffxiv-lut/cluts/${slug} -o downloads/${slug}
+	                ${downloader} ${options} download ${options2} -s ${slug} -c src/ffxiv-lut/cluts/${slug} -o downloads/${slug}
 	
 	mkdir -p ${output} || true
 	cp -rlv downloads/${slug}/* ${output}
@@ -41,8 +41,8 @@ git clone https://github.com/WorkingRobot/ffxiv-downloader.git src/ffxiv-downloa
 	git stash || true
 	git pull || true
 
-	cd FFXIVDownloader.Command
-	dotnet publish -c Release "-p:SelfContained=true;PublishSingleFile=true" -o ../../../bin
+	cd dotnet/FFXIVDownloader.Command
+	dotnet publish -c Release "-p:SelfContained=true;PublishSingleFile=true" -o ../../../../bin
 )
 
 # Step 3: ffxiv-version
