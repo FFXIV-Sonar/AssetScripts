@@ -1,7 +1,6 @@
 #!/bin/bash -e
 
 # variables
-export date=`date +%Y%m%d-%H%M%S`
 export downloader=bin/FFXIVDownloader.Command
 export patchver=bin/ffxiv-version
 export options="--verbose --debug"
@@ -69,7 +68,7 @@ git clone https://git.reminie.com/rreminy/ffxiv-version.git src/ffxiv-version ||
 	rm -rfv global.old
 	mv global global.old
 	mv global.new global
-) 2>&1 | tee -a global-${date}.log
+)
 
 # Step 4b: China version
 (
@@ -83,7 +82,7 @@ git clone https://git.reminie.com/rreminy/ffxiv-version.git src/ffxiv-version ||
 	rm -rfv cn.old
 	mv cn cn.old
 	mv cn.new cn
-) 2>&1 | tee -a cn-${date}.log
+)
 
 # Step 4c: Korea version
 (
@@ -97,7 +96,7 @@ git clone https://git.reminie.com/rreminy/ffxiv-version.git src/ffxiv-version ||
 	rm -rfv kr.old
 	mv kr kr.old
 	mv kr.new kr
-) 2>&1 | tee -a kr-${date}.log
+)
 
 # Step 4: Wait for tasks to finish (NOTE: If enabled)
 wait

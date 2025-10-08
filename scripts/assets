@@ -1,7 +1,6 @@
 #!/bin/bash -e
 
 # variables
-export date=`date +%Y%m%d-%H%M%S`
 export resources=bin/SonarResources
 
 # Step 1: SonarDistrib
