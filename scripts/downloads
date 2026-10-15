@@ -1,10 +1,10 @@
 #!/bin/bash -e
 
 # variables
-export downloader=bin/FFXIVDownloader.Command
+export downloader=bin/xiv-dl-linux-x64
 export patchver=bin/ffxiv-version
 export options="--verbose --debug"
-export options2="-p 1"
+export options2="-p 1 -u true"
 
 # functions
 function perform_download {
@@ -14,8 +14,9 @@ function perform_download {
 	verfile=$3
 
 	echo "Slug: ${slug} => ${output} (${verfile})"
-	echo "Command:" ${downloader} ${options} download ${options2} -s ${slug} -c src/ffxiv-lut/cluts/${slug} -o downloads/${slug}
-	                ${downloader} ${options} download ${options2} -s ${slug} -c src/ffxiv-lut/cluts/${slug} -o downloads/${slug}
+	# echo "Command:" ${downloader} ${options} download ${options2} -s ${slug} -c src/ffxiv-lut/cluts/${slug} -o downloads/${slug}
+	echo "Command:" ${downloader} ${options} download ${options2} -s ${slug} -o downloads/${slug}
+	                ${downloader} ${options} download ${options2} -s ${slug} -o downloads/${slug}
 	
 	mkdir -p ${output} || true
 	cp -rlv downloads/${slug}/* ${output}
@@ -25,26 +26,13 @@ function perform_download {
 	echo -n "${ver}" > "${output}/${verfile}.bck"
 }
 
-# Step 1: ffxiv-lut
-git clone https://github.com/WorkingRobot/ffxiv-lut.git src/ffxiv-lut || true
-(
-    cd src/ffxiv-lut
-	git stash || true
-	git pull || true
-)
+# Step 1: Download latest ffxiv-downloader
+rm -rfv ${downloader}
+wget https://github.com/WorkingRobot/ffxiv-downloader/releases/latest/download/xiv-dl-linux-x64 -O ${downloader}
+chmod 755 ${downloader}
+${downloader} -V
 
-# Step 2: FFXIVDownloader
-git clone https://github.com/WorkingRobot/ffxiv-downloader.git src/ffxiv-downloader || true
-(
-	cd src/ffxiv-downloader
-	git stash || true
-	git pull || true
-
-	cd dotnet/FFXIVDownloader.Command
-	dotnet publish -c Release "-p:SelfContained=true;PublishSingleFile=true" -o ../../../../bin
-)
-
-# Step 3: ffxiv-version
+# Step 2: ffxiv-version
 git clone https://git.reminie.com/rreminy/ffxiv-version.git src/ffxiv-version || true
 (
 	cd src/ffxiv-version
@@ -96,6 +84,20 @@ git clone https://git.reminie.com/rreminy/ffxiv-version.git src/ffxiv-version ||
 	rm -rfv kr.old
 	mv kr kr.old
 	mv kr.new kr
+)
+
+# Step 4c: Taiwan version
+(
+	rm -rfv tw.new || true
+	perform_download 0b90d03e tw.new/game ffxivgame
+	perform_download be3c0f25 tw.new/game sqpack/ex1/ex1
+	perform_download 27355e9f tw.new/game sqpack/ex2/ex2
+	perform_download 50326e09 tw.new/game sqpack/ex3/ex3
+	perform_download ce56fbaa tw.new/game sqpack/ex4/ex4
+	perform_download b951cb3c tw.new/game sqpack/ex5/ex5
+	rm -rfv tw.old
+	mv tw tw.old
+	mv tw.new tw
 )
 
 # Step 4: Wait for tasks to finish (NOTE: If enabled)
